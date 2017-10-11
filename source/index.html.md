@@ -2,17 +2,16 @@
 title: Bayo API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
-  - shell: cURL
-  - ruby: Ruby
   - php: PHP
-  - javascript: JavaScript
 
 toc_footers:
   - <a href='#'>Sign Up for a Developer API Key</a>
   - <a href='http://bayo.my'>Documentation Powered by Bayo Pay</a>
 
+
 includes:
   - errors
+
 
 search: true
 ---
@@ -65,19 +64,7 @@ BayoPay Niaga Key is uniquely encrypted string for BayoPay merchants. It is a ke
 
 > Example of how a Niaga Key looks like:
 
-```shell
-dT3jajIO93GH9shja83jl9a9w9hdfHY5
-```
-
-```ruby
-dT3jajIO93GH9shja83jl9a9w9hdfHY5
-```
-
 ```php
-dT3jajIO93GH9shja83jl9a9w9hdfHY5
-```
-
-```javascript
 dT3jajIO93GH9shja83jl9a9w9hdfHY5
 ```
 
@@ -97,20 +84,8 @@ BayoPay Request Hash or <code>bayo_reqhash</code> is to ensure the data integrit
 
 > Formula to generate bayo reqhash:
 
-```shell
-bayo_reqhash = hash(sha256, niagaID + currency + orderID + amount + niaga_key);
-```
-
-```ruby
-bayo_reqhash = hash(sha256, niagaID + currency + orderID + amount + niaga_key);
-```
-
 ```php
-bayo_reqhash = hash(sha256, niagaID + currency + orderID + amount + niaga_key);
-```
-
-```javascript
-bayo_reqhash = hash(sha256, niagaID + currency + orderID + amount + niaga_key);
+$bayo_reqhash = hash(sha256, $niagaID + $currency + $orderID + $amount + $niaga_key);
 ```
 
 <aside class="notice">
@@ -137,21 +112,10 @@ BayoPay bayo_reshash is a returning hash string to ensure the data integrity pas
 
 > Formula to generate bayo reshash:
 
-```shell
-bayo_reshash = hash(sha256, bayo_tranID + bayo_orderID + bayo_status + bayo_niagaID + bayo_amount + bayo_currency);
-```
-
-```ruby
-bayo_reshash = hash(sha256, bayo_tranID + bayo_orderID + bayo_status + bayo_niagaID + bayo_amount + bayo_currency);
-```
-
 ```php
-bayo_reshash = hash(sha256, bayo_tranID + bayo_orderID + bayo_status + bayo_niagaID + bayo_amount + bayo_currency);
+$bayo_reshash = hash(sha256, $bayo_tranID + $bayo_orderID + $bayo_status + $bayo_niagaID + $bayo_amount + $bayo_currency);
 ```
 
-```javascript
-bayo_reshash = hash(sha256, bayo_tranID + bayo_orderID + bayo_status + bayo_niagaID + bayo_amount + bayo_currency);
-```
 
 ### Final hash string
 - Payment Date/Time
@@ -171,8 +135,7 @@ connection will initiate a payment request from merchant system.
 
 ## Payment URL
 
-- http://pay-BayoPay.fwcms.my/index.php 
-- www.bayopay.com/index.php
+`https://gateway.bayo.my/bayoipg/Pays/index.php`
 
 The URL is an API to accept POST parameters from merchant site as well as the payment
 page for buyer.
@@ -187,7 +150,12 @@ Visa / MasterCard | creditmc | USD | 1.00 > x < 5000.00 | Multi-currency credit 
 
 This is the traditional integration method which will send the buyer information to BayoPay payment page.
 
-## Parameters 
+<aside class="notice">
+We provided an example of integrating your payment page / checkout page to send the buyer payment straight to our payment page.
+Please refer the <a href="#post-request-example"><code>POST Request Example</code></a> section.
+</aside>
+
+## Request Parameters 
 
 These parameters can be passed using either POST method. Please use UTF-8 encoding for all values.
 
@@ -208,8 +176,13 @@ Variable / Parameter | Type Format / Max Length | Description / Example
 
 ## Getting Result
 
-Payment result will be returned to merchant system once payment is done or user abandons the payment process. HTTP POST is the only method that BayoPay returns all parameters to merchant’s return URL for real time status update, which merchant can conﬁgure it in merchant admin. Merchant system should block all other methods or parameters from untrusted source.
+Payment result will be returned to merchant system once payment is done or user abandons the payment process. HTTP POST is the only method that BayoPay returns all parameters to merchant’s return URL for real time status update, which merchant can conﬁgure it in merchant admin.
 
+<aside class="warning">
+Merchant system should block all other methods or parameters from untrusted source.
+</aside>
+
+<!---
 ## Parameters
 
 Variable / Parameter | Type Format / Max Length | Description / Example
@@ -229,11 +202,11 @@ Variable / Parameter | Type Format / Max Length | Description / Example
 <code>bayo_txndate</code> | Date/Time( YYYY-MMDD HH:mm:ss) | Date/Time of the transaction.
 <code>bayo_reshash</code> | 32 chars hexadecimal string | This is the data integrity protection hash string. Refer bayo_reshash section for details.
 
-# Security & Data Integrity
 
 Merchant is recommended to implement IPN (instant payment notiﬁcation) in order to acknowledge (ACK) on the receiving of payment status from BayoPay. There are 2 ways to implement IPN. Please refer to IPN section for details.
 
-## Status Notiﬁcation
+
+## Status Notification
 <aside class="warning">
 WARNING : Please note that multiple payment notiﬁcations (either from return URL or callback URL) for single transaction is possible but this does not mean that the buyer has paid twice or multiple times.
 </aside>
@@ -241,8 +214,7 @@ WARNING : Please note that multiple payment notiﬁcations (either from return U
 ### IPN (Instant Payment Notification)
 
 For normal payment ﬂow, buyer’s browser is being redirected to BayoPay payment page, ﬁnancial institution or channel page (if any), and then return to merchant website or system. User might close the browser any time throughout the payment process, even the payment is completed, successfully or failed. Other possible reason that rarely happens is the network connectivity issue. As a result, BayoPay is unable to update merchant system on the payment status. Therefore, merchant is recommended to implement IPN to acknowledge (ACK) upon the receiving of payment status from BayoPay. Otherwise BayoPay will resend the payment status within a time interval.
-
-# Payment APIs
+-->
 
 ## Callback Function
 
@@ -259,248 +231,116 @@ Variable / Parameter | Type Format / Max Length | Description / Example
 <code>bayo_orderid</code> | Mandatory, Alphanumeric up to 32 characters. | Invoice or order number from merchant system. Can set to Readonly ﬁeld. E.g. BH2018-09rev.
 <code>bayo_reqhash</code> | Mandatory. 32 chars hexadecimal string. | This is the data integrity protection hash string. Refer bayo_reqhash section for details.
 
-## Getting Result
+## Response Sample
 
-These are the response from BayoPay system in JSON format.
+This is an example of response sent from our payment gateway:
 
-## Parameters
+> Response sample:
+
+```json
+{
+    "bayo_amount":"90.00",
+    "bayo _orderid":"1081699081", 
+    "bayo _tranid":"TXN160001126",
+    "bayo _niagaid":"100105000000203", 
+    "bayo_status":"00", 
+    "bayo_bankcode":"987", 
+    "bayo_paymentcode":"500333284335", 
+    "bayo_errorcode":null, 
+    "bayo_errordesc":null, 
+    "bayo_currency":"USD", 
+    "bayo_channel":"artajasa", 
+    "bayo_paydate":"2016-04-14 17:39:43",
+    "bayo_reshash":"1dc05ab215e073e3900ef07a00841 3b5e233c1434c1 2eb235e549a4595ed1f28"
+}
+```
+
+<aside class="notice">
+Response from our API will always be returned in JSON.
+</aside>
+
+## Response Parameters
 
 Variable / Parameter | Type Format / Max Length | Description / Example
 -------------------- | ------------------------ | ---------------------
-<code>bayo_amount</code> | |
-<code>bayo_orderid</code> | |
-<code>bayo_tranid</code> | |
-<code>bayo_niagaid</code> | |
-<code>bayo_</code> | |
-<code>bayo_</code> | |
-<code>bayo_</code> | |
-<code>bayo_</code> | |
-<code>bayo_</code> | |
-<code>bayo_</code> | |
-<code>bayo_</code> | |
-<code>bayo_</code> | |
-<code>bayo_</code> | |
-<code>bayo_</code> | |
-<code>bayo_</code> | |
-<code>bayo_</code> | |
-<code>bayo_</code> | |
-<code>bayo_</code> | |
+<code>bayo_amount</code> | 2 decimal points numeric value. | The total amount paid.
+<code>bayo_orderid</code> | Alphanumeric, 32 characters. | Invoice or order number from merchant system.
+<code>bayo_tranid</code> | Integer, 10 digits. | Unique	transaction	ID	for	tracking purpose.
+<code>bayo_niagaid</code> | Alphanumeric, 32 chars. | Niaga ID in BayoPay system.
+<code>bayo_status</code> | 2-digit numeric value | 00 for Successful payment, 11 for failure, 22 if pending.
+<code>bayo_bankcode</code> | Integer, 3 digits | Buyer’s email address.
+<code>bayo_paymentcode</code> | | Buyer’s mobile number or contact number.
+<code>bayo_appcode</code> | Alphanumeric, 16 chars. | Bank approval code. Mandatory for Credit Card. Certain channel returns empty value.
+<code>bayo_errorcode</code> | Alphanumeric. | Refer to the Error Codes section.
+<code>bayo_errordesc</code> | Text. | Error message or description.
+<code>bayo_currency</code> | 2 chars (ISO-4217) currency code. | Default currency is MYR for Malaysia channels.
+<code>bayo_channel</code> | Predeﬁned string in BayoPay system. | Channel references for merchant system.
+<code>bayo_txndate</code> | Date / Time ( YYYY-MMDD HH:mm:ss) | Date / Time of the transaction.
+<code>bayo_reshash</code> | 32 chars hexadecimal string. | This is the data integrity protection hash string. Refer bayo_reshash section for details.
 
 
+## Error Code
 
+The response codes in this section only apply to BayoPay transactions.
 
+Error Code | Description
+---------- | -----------
+<code>BP00001</code> | Missing required parameters.
+<code>BP00002</code> | Merchant info not found.
+<code>BP00003</code> | Merchant account issue. Please contact merchant.
+<code>BP00004</code> | System is busy now, temporary out of services. Please try later - txn blocked due to mass connection.
+<code>BP00005</code> | Payment info incorrect - reqhash unmatch.
+<code>BP00006</code> | This account doesn't authorize to use this channel - reqhash.
+<code>BP00007</code> | Currency unsupported.
+<code>BP00008</code> | Transaction amount must more than.
+<code>BP00009</code> | Transaction amount must less than.
+<code>BP00010</code> | Not allow to process.
+<code>BP00011</code> | Your request is not valid - Processor gateway conﬁg not found.
+<code>BP00012</code> | Your credit card number or expiration date is not valid.
+<code>BP00013</code> | System is busy now, temporary out of services. Please try later - Insert transaction error.
+<code>BP00014</code> | Payment timeout - Insert transaction error.
+<code>BP00015</code> | Transaction info not found.
+<code>BP00016</code> | Amount from bank do not match.
+<code>BP00017</code> | Signature from bank not match.
+<code>BP00018</code> | System is busy now, temporary out of services. Please try later - Update transaction status error.
+<code>BP00019</code> | System is busy now, temporary out of services - Attempt to update non pending status.
+<code>BP00020</code> | System is busy now, payment receipt cannot be shown. Please try later - openssl_decrypt failed.
+<code>BP00021</code> | The system have detected that the your IP provided is blacklisted in the server.
+<code>BP00022</code> | System is busy now, temporary out of services. Please try later - Update.
+<code>BP00023</code> | Session ID from bank do not matchtransaction error.
 
+## Currency Code
 
+The currency codes in this section only apply to BayoPay transactions.
 
-# Authentication
+Code | Currency
+---- | --------
+<code>840</code> | <code>USD</code>
+<code>458</code> | <code>MYR</code>
+<code>360</code> | <code>IDR</code>
 
-> To authorize, use this code:
+## POST Request Example
 
-```ruby
-require 'kittn'
+Here is an example on how to send a POST request to Bayo Payment Gateway.
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
+```php
+<?php
+$bayo_payment_gateway_url = "https://gateway.bayo.my/bayoipg/Pays/index.php";
+echo "<form action='<?=$bayo_payment_gateway_url ?>' method='post'>";
+echo "<input type='hidden' name='bayo_niagaid' value='<?= $niagaID?>'>";
+echo "<input type='hidden' name='bayo_channel' value='<?= $channel ?>'>"; 
+echo "<input type='hidden' name='bayo_currency' value='<?= $currency ?>'>"; 
+echo "<input type='hidden' name='bayo_orderid' value='<?= $orderid ?>'>"; 
+echo "<input type='hidden' name='bayo_amount' value='<?= $amount ?>'>"; 
+echo "<input type='hidden' name='bayo_name' value='<?= $name ?>'>";
+echo "<input type='hidden' name='bayo_email' value='<?= $email ?>'>"; 
+echo "<input type='hidden' name='bayo_mobile' value='<?= $mobile ?>'>"; 
+echo "<input type='hidden' name='bayo_description' value='<?= $desc ?>'>"; 
+echo "<input type='hidden' name='bayo_reqhash' value='<?= $hash ?>'>"; 
+echo "<input type='submit' value='PAY NOW'>";
+?>
 ```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
-
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+This example shows a <code>POST</code> request from merchant's checkout page. The request containing compulsory <code>POST</code> data or payload should be sent to our API.
 </aside>
-
-# Kittens
-
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
-
-> The above command returns JSON structured like this:
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
-```
-
-This endpoint retrieves all kittens.
-
-### HTTP Request
-
-`GET http://example.com/api/kittens`
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
-}
-```
-
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
-### HTTP Request
-
-`GET http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
-
-## Delete a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -X DELETE
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "deleted" : ":("
-}
-```
-
-This endpoint retrieves a specific kitten.
-
-### HTTP Request
-
-`DELETE http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
-
