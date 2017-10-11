@@ -216,18 +216,23 @@ Variable / Parameter | Type Format / Max Length | Description / Example
 -------------------- | ------------------------ | ---------------------
 <code>bayo_amount</code> | 2 decimal points numeric value | The total amount paid.
 <code>bayo_orderId</code> | Alphanumeric, 32 characters | Invoice or order number from merchant system.
-<code>bayo_tranId</code> | 
-<code>bayo_niagaId</code> 
-<code>bayo_status</code> 
-<code>bayo_bankcode</code> 
-<code>bayo_paymentcode</code> 
-<code>bayo_appcode</code> 
-<code>bayo_errorcode</code> 
-<code>bayo_errordesc</code> 
-<code>bayo_currency</code> 
-<code>bayo_channel</code> 
-<code>bayo_txndate</code> 
-<code>bayo_reshash</code> 
+<code>bayo_tranId</code> | Integer, 10 digits | Unique	transaction	ID	for	tracking purpose.
+<code>bayo_niagaId</code> | Alphanumeric, 32 chars | Niaga ID in BayoPay system.
+<code>bayo_status</code> | 2-digit numeric value | 00 for Successful payment, 11 for failure, 22 if pending.
+<code>bayo_bankcode</code> | Integer, 3 digits |
+<code>bayo_paymentcode</code> | |
+<code>bayo_appcode</code> | Alphanumeric, 16 | Bank approval code. Mandatory for Credit Card. Certain channel returns empty value.
+<code>bayo_errorcode</code> | Alphanumeric | Refer to the Error Codes section. 
+<code>bayo_errordesc</code> | Text | Error message or description.
+<code>bayo_currency</code> | 3 chars (ISO-4217) currency code | Default currency is MYR for Malaysia channels.
+<code>bayo_channel</code> | Predeﬁned string in BayoPay system | Channel references for merchant system.
+<code>bayo_txndate</code> | Date/Time( YYYY-MMDD HH:mm:ss) | Date/Time of the transaction.
+<code>bayo_reshash</code> | 32 chars hexadecimal string | This is the data integrity protection hash string. Refer bayo_reshash section for details.
+
+# Security & Data Integrity
+
+Merchant is recommended to implement IPN (instant payment notiﬁcation) in order to acknowledge (ACK) on the receiving of payment status from BayoPay. There are 2 ways to implement IPN. Please refer to IPN section for details.
+
 
 
 
