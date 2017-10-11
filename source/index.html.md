@@ -1,15 +1,15 @@
 ---
-title: API Reference
+title: Bayo API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
-  - shell
-  - ruby
-  - python
-  - javascript
+  - shell: cURL
+  - ruby: Ruby
+  - php: PHP
+  - javascript: JavaScript
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
+  - <a href='#'>Sign Up for a Developer API Key</a>
+  - <a href='http://bayo.my'>Documentation Powered by Bayo Pay</a>
 
 includes:
   - errors
@@ -19,11 +19,113 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+BayoPay is a product by [Bayo Pay (M) Sdn Bhd](http://bayo.my), a company that is focusing on online / offline payment solutions. We aim to be a market leader as a Payment Facilitator on payment methods in Malaysia and globally.
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+## How Does It Works?
 
-This example API documentation page was created with [Slate](https://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
+BayoPay is a service that helps merchant to sell online and expand rapidly to South-East Asia market. The service includes:
+
+![alt text](images/how_does_it_works.png "Title")
+
+### Frontend
+- RWD or responsive web design payment page for online buyer to checkout.
+- Channel switching is available for same currency channels.
+- Common shopping carts payment module, plugin, add-on, or extension supported.
+
+### Backend
+- Callback to update merchant system on deferred status change.
+- Merchant can login to control panel to track payment status.
+- Scheduled report on daily / weekly / monthly basis to update merchant via email.
+- Real-time visualize reports.
+
+# Payment Flow Overview
+
+BayoPay provides hosted payment page service. The integration is as simple as passing parameters via HTTPS POST method from merchant to BayoPay payment page. Buyer will proceed their transaction on internet banking or any payment channel. Once completed, BayoPay will redirect buyer’s front-end back to merchant  system,  using  POST  method.  IPN (Instant Payment Notification) or ACK from merchant could be implemented to confirm the receiving of payment status update.
+
+![alt text](images/payment_flow_overview.png "Title")
+
+## Handling Payment Notification
+
+Merchant needs to prepare 3 simple and similar scripts to handle payment notification from BayoPay:
+
+Script | Description
+------ | -------
+**Return URL** | For frontend or browser based notification, which are normally not a 100% reliable and robust channel due to unexpected network connectivity issue or client-side behaviour, such as browser application crash.
+**Callback URL** | A special handler to get notified on non-realtime payment status, such as "deferred status update", change of payment status, or cash channel, which is not a real time payment naturally.
+
+After the normal payment ﬂow, merchant can always send payment status query request, which is deﬁned in ReQuery APIs (a.k.a PSQ, Payment Status Query).
+
+# Security & Data Integrity
+
+BayoPay system uses “Niaga ID” & “Niaga Key” to generate encrypted hash to ensure data integrity in the payment process.
+
+## Niaga Key
+
+BayoPay Niaga Key is uniquely encrypted string for BayoPay merchants. It is a key or seed for generating one-time hash data, which are known as “bayo_reqhash” (from merchant to BayoPay) or “bayo_reshash” (from BayoPay to merchant).
+
+> Example of how a Niaga Key looks like:
+
+```shell
+dT3jajIO93GH9shja83jl9a9w9hdfHY5
+```
+
+```ruby
+dT3jajIO93GH9shja83jl9a9w9hdfHY5
+```
+
+```php
+dT3jajIO93GH9shja83jl9a9w9hdfHY5
+```
+
+```javascript
+dT3jajIO93GH9shja83jl9a9w9hdfHY5
+```
+
+### How to get the Niaga Key?
+- Login to Bayopay Merchant Admin site.
+- Go to Settings &rarr; Transaction Settings.
+- Scroll down until you see "Niaga Key".
+- Get the value and use it on any functions that require it.
+
+<aside class="warning">
+<code>dT3jajIO93GH9shja83jl9a9w9hdfHY5</code> is merchant’s Niaga Key provided by BayoPay. Please make sure it is at least 32 characters. Merchant or developer is advised not to disclose this secret key to the public. Once the key is compromised, please contact BayoPay immediately to reset the key.
+</aside>
+
+## Request Hash
+
+BayoPay Request Hash or <code>bayo_reqhash</code> is to ensure the data integrity passed from merchant system to BayoPay payment page to avoid man-in-the-middle (MITM) attack. It becomes a mandatory for each transaction if “Enable Verify Payment” is activated in merchant proﬁle as shown.
+
+> Formula to generate bayo reqhash:
+
+```shell
+bayo_reqhash = hash(sha256, niagaID + currency + orderID + amount + niaga_key);
+```
+
+```ruby
+bayo_reqhash = hash(sha256, niagaID + currency + orderID + amount + niaga_key);
+```
+
+```php
+bayo_reqhash = hash(sha256, niagaID + currency + orderID + amount + niaga_key);
+```
+
+```javascript
+bayo_reqhash = hash(sha256, niagaID + currency + orderID + amount + niaga_key);
+```
+
+<aside class="notice">
+<code><span style="color: #272822">bayo_reqhash</span></code> is encrypted using <code><span style="color: #272822">SHA256</span></code> encryption hash function and consists of the following information (must be set in the following orders):
+<ul>
+<li>BayoPay Niaga ID</li>
+<li>Currency</li>
+<li>Merchant Order ID</li>
+<li>Transaction Amount (With 2 decimal place and without thousand)</li>
+</ul>
+</aside>
+
+
+
+
 
 # Authentication
 
