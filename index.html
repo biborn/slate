@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>API Reference</title>
+    <title>Bayo API Reference</title>
 
     <style>
       .highlight table td { padding: 5px; }
@@ -199,9 +199,13 @@
     <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
     <link href="stylesheets/print.css" rel="stylesheet" media="print" />
       <script src="javascripts/all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;python&quot;,&quot;javascript&quot;]">
+  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;php&quot;,&quot;javascript&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -211,10 +215,10 @@
     <div class="toc-wrapper">
       <img src="images/logo.png" class="logo" alt="Logo" />
         <div class="lang-selector">
-              <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
-              <a href="#" data-language-name="javascript">javascript</a>
+              <a href="#" data-language-name="shell">cURL</a>
+              <a href="#" data-language-name="ruby">Ruby</a>
+              <a href="#" data-language-name="php">PHP</a>
+              <a href="#" data-language-name="javascript">JavaScript</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -223,6 +227,14 @@
       <div id="toc" class="toc-list-h1">
           <li>
             <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#how-does-it-works" class="toc-h2 toc-link" data-title="Introduction">How Does It Works?</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#payment-flow-overview" class="toc-h1 toc-link" data-title="Payment Flow Overview">Payment Flow Overview</a>
           </li>
           <li>
             <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
@@ -254,11 +266,48 @@
       <div class="dark-box"></div>
       <div class="content">
         <h1 id='introduction'>Introduction</h1>
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
+<p>BayoPay is a product by <a href="http://bayo.my">Bayo Pay (M) Sdn Bhd</a>, a company that is focusing on online / offline payment solutions. We aim to be a market leader as a Payment Facilitator on payment methods in Malaysia and globally.</p>
+<h2 id='how-does-it-works'>How Does It Works?</h2>
+<p>BayoPay is a service that helps merchant to sell online and expand rapidly to South-East Asia market. The service includes:</p>
 
-<p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
+<p><img src="images/how_does_it_works.png" title="Title" alt="alt text" /></p>
+<h3 id='frontend'>Frontend</h3>
+<ul>
+<li>RWD or responsive web design payment page for online buyer to checkout.</li>
+<li>Channel switching is available for same currency channels.</li>
+<li>Common shopping carts payment module, plugin, add-on, or extension supported.</li>
+</ul>
+<h3 id='backend'>Backend</h3>
+<ul>
+<li>Callback to update merchant system on deferred status change.</li>
+<li>Merchant can login to control panel to track payment status.</li>
+<li>Scheduled report on daily / weekly / monthly basis to update merchant via email.</li>
+<li>Real-time visualize reports.</li>
+</ul>
+<h1 id='payment-flow-overview'>Payment Flow Overview</h1>
+<p>BayoPay provides hosted payment page service. The integration is as simple as passing parameters via HTTPS POST method from merchant to BayoPay payment page. Buyer will proceed their transaction on internet banking or any payment channel. Once completed, BayoPay will redirect buyer’s front-end back to merchant  system,  using  POST  method.  IPN (Instant Payment Notification) or ACK from merchant could be implemented to confirm the receiving of payment status update.</p>
 
-<p>This example API documentation page was created with <a href="https://github.com/tripit/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&#39;s documentation.</p>
+<p><img src="images/payment_flow_overview.png" title="Title" alt="alt text" /></p>
+
+<p>Merchant needs to prepare 3 simple and similar scripts to handle payment notification from BayoPay:</p>
+
+<table><thead>
+<tr>
+<th>Script</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>Return URL</strong></td>
+<td>For frontend or browser based notification, which are normally not a 100% reliable and robust channel due to unexpected network connectivity issue or client-side behaviour, such as browser application crash.</td>
+</tr>
+<tr>
+<td><strong>Callback URL</strong></td>
+<td>A special handler to get notified on non-realtime payment status, such as &quot;deferred status update&quot;, change of payment status, or cash channel, which is not a real time payment naturally.</td>
+</tr>
+</tbody></table>
+
+<p>After the normal payment ﬂow, merchant can always send payment status query request, which is deﬁned in ReQuery APIs (a.k.a PSQ, Payment Status Query).</p>
 <h1 id='authentication'>Authentication</h1>
 <blockquote>
 <p>To authorize, use this code:</p>
@@ -492,10 +541,10 @@ Remember — a happy kitten is an authenticated kitten!
       </div>
       <div class="dark-box">
           <div class="lang-selector">
-                <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
-                <a href="#" data-language-name="javascript">javascript</a>
+                <a href="#" data-language-name="shell">cURL</a>
+                <a href="#" data-language-name="ruby">Ruby</a>
+                <a href="#" data-language-name="php">PHP</a>
+                <a href="#" data-language-name="javascript">JavaScript</a>
           </div>
       </div>
     </div>
