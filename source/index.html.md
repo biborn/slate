@@ -215,9 +215,9 @@ Payment result will be returned to merchant system once payment is done or user 
 Variable / Parameter | Type Format / Max Length | Description / Example
 -------------------- | ------------------------ | ---------------------
 <code>bayo_amount</code> | 2 decimal points numeric value | The total amount paid.
-<code>bayo_orderId</code> | Alphanumeric, 32 characters | Invoice or order number from merchant system.
-<code>bayo_tranId</code> | Integer, 10 digits | Unique	transaction	ID	for	tracking purpose.
-<code>bayo_niagaId</code> | Alphanumeric, 32 chars | Niaga ID in BayoPay system.
+<code>bayo_orderid</code> | Alphanumeric, 32 characters | Invoice or order number from merchant system.
+<code>bayo_tranid</code> | Integer, 10 digits | Unique	transaction	ID	for	tracking purpose.
+<code>bayo_niagaid</code> | Alphanumeric, 32 chars | Niaga ID in BayoPay system.
 <code>bayo_status</code> | 2-digit numeric value | 00 for Successful payment, 11 for failure, 22 if pending.
 <code>bayo_bankcode</code> | Integer, 3 digits |
 <code>bayo_paymentcode</code> | |
@@ -233,7 +233,58 @@ Variable / Parameter | Type Format / Max Length | Description / Example
 
 Merchant is recommended to implement IPN (instant payment notiﬁcation) in order to acknowledge (ACK) on the receiving of payment status from BayoPay. There are 2 ways to implement IPN. Please refer to IPN section for details.
 
+## Status Notiﬁcation
+<aside class="warning">
+WARNING : Please note that multiple payment notiﬁcations (either from return URL or callback URL) for single transaction is possible but this does not mean that the buyer has paid twice or multiple times.
+</aside>
 
+### IPN (Instant Payment Notification)
+
+For normal payment ﬂow, buyer’s browser is being redirected to BayoPay payment page, ﬁnancial institution or channel page (if any), and then return to merchant website or system. User might close the browser any time throughout the payment process, even the payment is completed, successfully or failed. Other possible reason that rarely happens is the network connectivity issue. As a result, BayoPay is unable to update merchant system on the payment status. Therefore, merchant is recommended to implement IPN to acknowledge (ACK) upon the receiving of payment status from BayoPay. Otherwise BayoPay will resend the payment status within a time interval.
+
+# Payment APIs
+
+## Callback Function
+
+### Parameters
+
+These parameters can be passed using either POST method. Please use UTF-8 encoding for all values.
+
+
+Variable / Parameter | Type Format / Max Length | Description / Example
+-------------------- | ------------------------ | ---------------------
+<code>bayo_niagaid</code> | Mandatory, Alphanumeric. | The total amount paid.
+<code>bayo_currency</code> | Mandatory, 3 chars ISO-4217 currency code. | Invoice or order number from merchant system.
+<code>bayo_amount</code> | Mandatory, Decimal with 2 decimal points and without thousand separator. | Unique	transaction	ID	for	tracking purpose.
+<code>bayo_orderid</code> | Mandatory, Alphanumeric up to 32 characters. | Invoice or order number from merchant system. Can set to Readonly ﬁeld. E.g. BH2018-09rev.
+<code>bayo_reqhash</code> | Mandatory. 32 chars hexadecimal string. | This is the data integrity protection hash string. Refer bayo_reqhash section for details.
+
+## Getting Result
+
+These are the response from BayoPay system in JSON format.
+
+## Parameters
+
+Variable / Parameter | Type Format / Max Length | Description / Example
+-------------------- | ------------------------ | ---------------------
+<code>bayo_amount</code> | |
+<code>bayo_orderid</code> | |
+<code>bayo_tranid</code> | |
+<code>bayo_niagaid</code> | |
+<code>bayo_</code> | |
+<code>bayo_</code> | |
+<code>bayo_</code> | |
+<code>bayo_</code> | |
+<code>bayo_</code> | |
+<code>bayo_</code> | |
+<code>bayo_</code> | |
+<code>bayo_</code> | |
+<code>bayo_</code> | |
+<code>bayo_</code> | |
+<code>bayo_</code> | |
+<code>bayo_</code> | |
+<code>bayo_</code> | |
+<code>bayo_</code> | |
 
 
 
