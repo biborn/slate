@@ -123,6 +123,115 @@ bayo_reqhash = hash(sha256, niagaID + currency + orderID + amount + niaga_key);
 </ul>
 </aside>
 
+## Response Hash
+
+BayoPay bayo_reshash is a returning hash string to ensure the data integrity passed back from BayoPay to merchant system. Merchant MUST verify this hash string properly and also compare the order ID, currency, amount, and the payment date/time if possible, to protect self-interest from being cheated by hacker buyer. bayo_reshash was encrypted twice using sha256 encryption hash function and consists of the following information (must be set in the following orders):
+
+### First hash string
+- Transaction ID
+- Order ID
+- Status
+- BayoPay Niaga ID
+- Amount
+- Currency
+
+> Formula to generate bayo reshash:
+
+```shell
+bayo_reshash = hash(sha256, bayo_tranID + bayo_orderID + bayo_status + bayo_niagaID + bayo_amount + bayo_currency);
+```
+
+```ruby
+bayo_reshash = hash(sha256, bayo_tranID + bayo_orderID + bayo_status + bayo_niagaID + bayo_amount + bayo_currency);
+```
+
+```php
+bayo_reshash = hash(sha256, bayo_tranID + bayo_orderID + bayo_status + bayo_niagaID + bayo_amount + bayo_currency);
+```
+
+```javascript
+bayo_reshash = hash(sha256, bayo_tranID + bayo_orderID + bayo_status + bayo_niagaID + bayo_amount + bayo_currency);
+```
+
+### Final hash string
+- Payment Date/Time
+- BayoPay Niaga ID
+- First hash string
+- Approval Code
+- BayoPay Niaga Key
+
+#Sandbox Account
+
+#Payment APIs
+
+## Initiating Payment
+
+Passing parameters to BayoPay payment page using POST method via HTTPS or SSL
+connection will initiate a payment request from merchant system.
+
+## Payment URL
+
+- http://pay-BayoPay.fwcms.my/index.php 
+- www.bayopay.com/index.php
+
+The URL is an API to accept POST parameters from merchant site as well as the payment
+page for buyer.
+
+## Channel Lists
+
+Channel Name | Parameter Name | Accepted Currency | Processing Amount Limit (RM) | Extra Information
+------------ | -------------- | ----------------- | ---------------------------- | -----------------
+Visa / MasterCard | creditmc | USD | 1.00 > x < 5000.00 | Multi-currency credit channel
+
+## Payment Page Integration
+
+This is the traditional integration method which will send the buyer information to BayoPay payment page.
+
+## Parameters 
+
+These parameters can be passed using either POST method. Please use UTF-8 encoding for all values.
+
+Variable / Parameter | Type Format / Max Length | Description / Example
+-------------------- | ------------------------ | ---------------------
+<code>bayo_niagaid</code> | Mandatory, Alphanumeric. | Niaga ID provided by BayoPay
+<code>bayo_currency</code> | Mandatory, 3 chars ISO- 4217 currency code. | Default payment currency from merchant site. E.g. MYR, USD, EUR SGD, CNY, IDR
+<code>bayo_amount</code> | Mandatory, Decimal with 2 decimal points and without thousand separator. | The total amount to be paid in one purchase order. Conﬁgurable to lock this ﬁeld (Read-only). E.g. 500, 168.99
+<code>bayo_orderid</code> | Mandatory, Alphanumeric up to 32 characters. | Invoice or order number from merchant system. Can set to Read-only ﬁeld. E.g. BH2018-09rev
+<code>bayo_name</code> | Mandatory, Alphanumeric, 128 chars. | Buyer’s full name.
+<code>bayo_email</code> | Mandatory, Email, 128 chars. | Buyer’s email address.
+<code>bayo_mobile</code> | Mandatory, Alphanumeric, 32 chars. | Buyer’s mobile number or contact number.
+<code>bayo_description</code> | Mandatory, Alphanumeric, 64kB. | Purchase itemized list or order description. Avoid special character so the request is not blocked by web application ﬁrewall.
+<code>bayo_channel</code> | Mandatory, Predeﬁned string. | Default payment page will be displayed. Refer to Channel Lists.
+<code>bayo_returnurl </code> | Optional, URL.  | Used for multiple return URL. URLs must be registered beforehand with BayoPay.
+<code>bayo_callbackurl</code> | Optional, URL. | Used for multiple callback URL. URLs must be registered beforehand with BayoPay.
+<code>bayo_reqhash</code> | Mandatory. 32 chars hexadecimal string. | This is the data integrity protection hash string. Refer bayo_reqhash section for details.
+
+## Getting Result
+
+Payment result will be returned to merchant system once payment is done or user abandons the payment process. HTTP POST is the only method that BayoPay returns all parameters to merchant’s return URL for real time status update, which merchant can conﬁgure it in merchant admin. Merchant system should block all other methods or parameters from untrusted source.
+
+## Parameters
+
+Variable / Parameter | Type Format / Max Length | Description / Example
+-------------------- | ------------------------ | ---------------------
+<code>bayo_amount</code> | 2 decimal points numeric value | The total amount paid.
+<code>bayo_orderId</code> | Alphanumeric, 32 characters | Invoice or order number from merchant system.
+<code>bayo_tranId</code> | 
+<code>bayo_niagaId</code> 
+<code>bayo_status</code> 
+<code>bayo_bankcode</code> 
+<code>bayo_paymentcode</code> 
+<code>bayo_appcode</code> 
+<code>bayo_errorcode</code> 
+<code>bayo_errordesc</code> 
+<code>bayo_currency</code> 
+<code>bayo_channel</code> 
+<code>bayo_txndate</code> 
+<code>bayo_reshash</code> 
+
+
+
+
 
 
 
